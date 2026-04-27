@@ -1,0 +1,9 @@
+[common]
+RuntimePath=/var/run/6dainas
+
+[app]
+LogPath = /var/log/6dainas
+LogSaveName = user-service
+LogFileExt = log
+DBPath     = /var/lib/6dainas/db
+UserDataPath = /var/lib/6dainas

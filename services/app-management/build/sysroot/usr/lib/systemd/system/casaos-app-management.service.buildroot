@@ -1,0 +1,14 @@
+[Unit]
+After=6dainas-message-bus.service
+After=docker.service
+Description=6DAiNAS-OS App Management Service
+
+[Service]
+ExecStartPre=/usr/bin/6dainas-app-management -v
+ExecStart=/usr/bin/6dainas-app-management -c /etc/6dainas/app-management.conf --removeRuntimeIfNoNvidiaGPU true
+PIDFile=/run/casaos/app-management.pid
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,1 @@
+../debian/cleanup-6dainas.sh

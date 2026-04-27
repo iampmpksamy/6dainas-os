@@ -1,0 +1,62 @@
+name: Build & Release 6DAiNAS-OS
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: npm install -g pnpm@9
+
+      - name: Build UI
+        run: |
+          cd ui
+          pnpm install
+          pnpm build
+
+      - name: Build Services
+        run: |
+          mkdir -p release/usr/bin
+
+          for svc in gateway message-bus user-service app-management main; do
+            cd services/$svc
+            go mod tidy
+            go build -o ../../release/usr/bin/6dainas-$svc
+            cd ../../
+          done
+
+      - name: Copy UI
+        run: |
+          mkdir -p release/usr/share/6dainas/www
+          cp -r ui/dist/* release/usr/share/6dainas/www/ || cp -r ui/build/* release/usr/share/6dainas/www/
+
+      - name: Copy systemd
+        run: |
+          mkdir -p release/systemd
+          cp systemd/*.service release/systemd/
+
+      - name: Create tar
+        run: |
+          tar -czf 6dainas-${{ github.ref_name }}.tar.gz release/
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: 6dainas-${{ github.ref_name }}.tar.gz

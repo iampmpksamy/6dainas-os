@@ -1,0 +1,252 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+project_name: 6dainas
+before:
+  hooks:
+    - go generate
+    - go run github.com/google/go-licenses@latest check . --disallowed_types=restricted
+    - go mod tidy
+    - go test -race -v ./...
+
+builds:
+  - id: 6dainas-amd64
+    binary: build/sysroot/usr/bin/6dainas
+    hooks:
+      post:
+        - upx --best --lzma -v --no-progress "{{ .Path }}"
+    env:
+      - CC=x86_64-linux-gnu-gcc
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -X github.com/6dainas/6dainas-os/drivers/google_drive.client_id={{.Env.GoogleID}}
+      - -X github.com/6dainas/6dainas-os/drivers/google_drive.client_secret={{.Env.GoogleSecret}}
+      - -X github.com/6dainas/6dainas-os/drivers/onedrive.client_id={{.Env.OneDriveID}}
+      - -X github.com/6dainas/6dainas-os/drivers/onedrive.client_secret={{.Env.OneDriveSecret}}
+      - -X github.com/6dainas/6dainas-os/drivers/dropbox.app_key={{.Env.DropboxKey}}
+      - -X github.com/6dainas/6dainas-os/drivers/dropbox.app_secret={{.Env.DropboxSecret}}
+      - -s
+      - -w
+      - -extldflags "-static"
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - amd64
+  - id: 6dainas-arm64
+    binary: build/sysroot/usr/bin/6dainas
+    # hooks:
+    #   post:
+    #     - upx --best --lzma -v --no-progress "{{ .Path }}"
+    env:
+      - CC=aarch64-linux-gnu-gcc
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -X github.com/6dainas/6dainas-os/drivers/google_drive.client_id={{.Env.GoogleID}}
+      - -X github.com/6dainas/6dainas-os/drivers/google_drive.client_secret={{.Env.GoogleSecret}}
+      - -X github.com/6dainas/6dainas-os/drivers/onedrive.client_id={{.Env.OneDriveID}}
+      - -X github.com/6dainas/6dainas-os/drivers/onedrive.client_secret={{.Env.OneDriveSecret}}
+      - -X github.com/6dainas/6dainas-os/drivers/dropbox.app_key={{.Env.DropboxKey}}
+      - -X github.com/6dainas/6dainas-os/drivers/dropbox.app_secret={{.Env.DropboxSecret}}
+      - -s
+      - -w
+      - -extldflags "-static"
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - arm64
+  - id: 6dainas-arm-7
+    binary: build/sysroot/usr/bin/6dainas
+    hooks:
+      post:
+        - upx --best --lzma -v --no-progress "{{ .Path }}"
+    env:
+      - CC=arm-linux-gnueabihf-gcc
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -X github.com/6dainas/6dainas-os/drivers/google_drive.client_id={{.Env.GoogleID}}
+      - -X github.com/6dainas/6dainas-os/drivers/google_drive.client_secret={{.Env.GoogleSecret}}
+      - -X github.com/6dainas/6dainas-os/drivers/onedrive.client_id={{.Env.OneDriveID}}
+      - -X github.com/6dainas/6dainas-os/drivers/onedrive.client_secret={{.Env.OneDriveSecret}}
+      - -X github.com/6dainas/6dainas-os/drivers/dropbox.app_key={{.Env.DropboxKey}}
+      - -X github.com/6dainas/6dainas-os/drivers/dropbox.app_secret={{.Env.DropboxSecret}}
+      - -s
+      - -w
+      - -extldflags "-static"
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - arm
+    goarm:
+      - "7"
+  - id: 6dainas-riscv64
+    binary: build/sysroot/usr/bin/6dainas
+    env:
+      - CC=riscv64-linux-gnu-gcc
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -X github.com/6dainas/6dainas-os/drivers/google_drive.client_id={{.Env.GoogleID}}
+      - -X github.com/6dainas/6dainas-os/drivers/google_drive.client_secret={{.Env.GoogleSecret}}
+      - -X github.com/6dainas/6dainas-os/drivers/onedrive.client_id={{.Env.OneDriveID}}
+      - -X github.com/6dainas/6dainas-os/drivers/onedrive.client_secret={{.Env.OneDriveSecret}}
+      - -X github.com/6dainas/6dainas-os/drivers/dropbox.app_key={{.Env.DropboxKey}}
+      - -X github.com/6dainas/6dainas-os/drivers/dropbox.app_secret={{.Env.DropboxSecret}}
+      - -s
+      - -w
+      - -extldflags "-static"
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - riscv64
+  - id: 6dainas-migration-tool-amd64
+    binary: build/sysroot/usr/bin/6dainas-migration-tool
+    hooks:
+      post:
+        - upx --best --lzma -v --no-progress "{{ .Path }}"
+    main: ./cmd/migration-tool
+    env:
+      - CC=x86_64-linux-gnu-gcc
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -s
+      - -w
+      - -extldflags "-static"
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - amd64
+  - id: 6dainas-migration-tool-arm64
+    binary: build/sysroot/usr/bin/6dainas-migration-tool
+    # hooks:
+    #   post:
+    #     - upx --best --lzma -v --no-progress "{{ .Path }}"
+    main: ./cmd/migration-tool
+    env:
+      - CC=aarch64-linux-gnu-gcc
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -s
+      - -w
+      - -extldflags "-static"
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - arm64
+  - id: 6dainas-migration-tool-arm-7
+    binary: build/sysroot/usr/bin/6dainas-migration-tool
+    hooks:
+      post:
+        - upx --best --lzma -v --no-progress "{{ .Path }}"
+    main: ./cmd/migration-tool
+    env:
+      - CC=arm-linux-gnueabihf-gcc
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -s
+      - -w
+      - -extldflags "-static"
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - arm
+    goarm:
+      - "7"
+  - id: 6dainas-migration-tool-riscv64
+    binary: build/sysroot/usr/bin/6dainas-migration-tool
+    main: ./cmd/migration-tool
+    env:
+      - CC=riscv64-linux-gnu-gcc
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -s
+      - -w
+      - -extldflags "-static"
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - riscv64
+archives:
+  - name_template:  >- 
+      {{ .Os }}-{{- if eq .Arch "arm" }}arm-7{{- else }}{{ .Arch }}{{- end }}-{{ .ProjectName }}-v{{ .Version }}
+    id: casaos
+    builds:
+      - casaos-amd64
+      - casaos-arm64
+      - casaos-arm-7
+      - casaos-riscv64
+    files:
+      - build/**/*
+  - name_template: >-
+      {{ .Os }}-{{- if eq .Arch "arm" }}arm-7{{- else }}{{ .Arch }}{{- end }}-{{ .ProjectName }}-migration-tool-v{{ .Version }}
+    id: 6dainas-migration-tool
+    builds:
+      - casaos-migration-tool-amd64
+      - casaos-migration-tool-arm64
+      - casaos-migration-tool-arm-7
+      - casaos-migration-tool-riscv64
+    files:
+      - build/sysroot/etc/**/*
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ incpatch .Version }}"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+# release:
+#   github:
+#     owner: IceWhaleTech
+#     name: CasaOS
+#   draft: true
+#   prerelease: auto
+#   mode: replace
+#   name_template: "v{{ .Version }}"
+release:
+  github:
+    owner: IceWhaleTech
+    name: CasaOS
+  draft: true
+  prerelease: auto
+  mode: replace
+  name_template: "v{{ .Version }}"

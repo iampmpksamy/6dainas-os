@@ -1,0 +1,13 @@
+[common]
+RuntimePath = /var/run/6dainas
+
+[app]
+LogPath = /var/log/6dainas/
+LogSaveName = app-management
+LogFileExt = log
+AppStorePath = /var/lib/6dainas/appstore
+AppsPath = /var/lib/6dainas/apps
+
+[server]
+appstore = https://cdn.jsdelivr.net/gh/IceWhaleTech/6DAiNAS-AppStore@gh-pages/store/main.zip
+appstore = https://github.com/bigbeartechworld/big-bear-6dainas/archive/refs/heads/master.zip

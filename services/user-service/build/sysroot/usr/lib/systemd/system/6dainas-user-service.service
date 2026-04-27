@@ -1,0 +1,13 @@
+[Unit]
+After=6dainas-message-bus.service
+Description=6DAiNAS-OS User Service
+
+[Service]
+ExecStartPre=/usr/bin/6dainas-user-service -v
+ExecStart=/usr/bin/6dainas-user-service -c /etc/6dainas/user-service.conf
+PIDFile=/var/run/6dainas/user-service.pid
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

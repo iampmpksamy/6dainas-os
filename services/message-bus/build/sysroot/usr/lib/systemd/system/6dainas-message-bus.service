@@ -1,0 +1,13 @@
+[Unit]
+After=6dainas-gateway.service
+Description=6DAiNAS-OS Message Bus Service
+
+[Service]
+ExecStartPre=/usr/bin/6dainas-message-bus -v
+ExecStart=/usr/bin/6dainas-message-bus -c /etc/6dainas/message-bus.conf
+PIDFile=/var/run/6dainas/message-bus.pid
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

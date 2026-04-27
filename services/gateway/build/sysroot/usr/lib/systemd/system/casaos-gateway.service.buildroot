@@ -1,0 +1,13 @@
+[Unit]
+After=network.target
+Description=6DAiNAS-OS Gateway
+
+[Service]
+ExecStartPre=/usr/bin/6dainas-gateway -v
+ExecStart=/usr/bin/6dainas-gateway -w /usr/share/6dainas/www
+PIDFile=/var/run/6dainas/gateway.pid
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

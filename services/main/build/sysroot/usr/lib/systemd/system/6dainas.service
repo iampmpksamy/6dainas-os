@@ -1,0 +1,13 @@
+[Unit]
+After=6dainas-message-bus.service
+After=rclone.service
+Description=6DAiNAS-OS Main Service
+
+[Service]
+ExecStart=/usr/bin/6dainas -c /etc/6dainas/6dainas.conf
+PIDFile=/var/run/6dainas/6dainas.pid
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

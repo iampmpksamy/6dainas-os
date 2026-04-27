@@ -1,0 +1,7 @@
+[common]
+RuntimePath=/var/run/6dainas
+
+[app]
+LogPath=/var/log/6dainas
+LogSaveName=message-bus
+LogFileExt=log
